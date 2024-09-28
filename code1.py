@@ -2,18 +2,19 @@ import streamlit as st
 import pandas as pd
 import plotly.express as px
 
-df = pd.read_csv('Dubai.csv')
-df['Posted_date'] = pd.to_datetime(df['Posted_date'])
-prices_month_mean = df[["Posted_date", "Rent"]].groupby("Posted_date")["Rent"].mean().reset_index()
-fig = px.line(prices_month_mean, x='Posted_date', y="Rent", color_discrete_sequence=["darkolivegreen"], title="Giá Thuê Nhà Theo Thời Gian")
+# Assuming you have a Pandas DataFrame 'df'
+avg_rent_per_location = df.groupby('Location')['Rent'].mean().reset_index()
 
-fig.update_layout(
-    title_font=dict(color="darkolivegreen"),
-    xaxis_title="Ngày Đăng",
-    yaxis_title="Giá Thuê (triệu VND)",
-    font=dict(
-        family="serif",
-        size=14,
-        color="darkolivegreen"))
+# Create a treemap using Plotly Express
+fig_treemap = px.treemap(
+    avg_rent_per_location, 
+    path=['Location'], 
+    values='Rent', 
+    title='Giá Thuê Trung Bình Theo Địa Điểm Cụ Thể',
+    width=1200,
+    height=600)
+fig_treemap.layout.font = dict(family='serif', size=12)
 
-st.plotly_chart(fig, use_container_width=True)
+# Create a Streamlit app
+st.title("Treemap Example")
+st.plotly_chart(fig_treemap)
