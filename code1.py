@@ -2,6 +2,7 @@ import streamlit as st
 import pandas as pd
 import plotly.express as px
 
+df = pd.read_csv('Dubai.csv')
 df['Posted_date'] = pd.to_datetime(df['Posted_date'])
 prices_month_mean = df[["Posted_date", "Rent"]].groupby("Posted_date")["Rent"].mean().reset_index()
 fig = px.line(prices_month_mean, x='Posted_date', y="Rent", color_discrete_sequence=["darkolivegreen"], title="Giá Thuê Nhà Theo Thời Gian")
